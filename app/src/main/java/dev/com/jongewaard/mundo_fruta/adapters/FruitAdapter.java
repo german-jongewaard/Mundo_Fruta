@@ -13,23 +13,23 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import dev.com.jongewaard.mundo_fruta.R;
-import dev.com.jongewaard.mundo_fruta.models.Movie;
+import dev.com.jongewaard.mundo_fruta.models.Fruit;
 
 /**
  * Created by german on 20-11-17.
  */
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> {
 
-    private List<Movie> movies;
+    private List<Fruit> fruits;
     private int layout;
     private OnItemClickListener itemClickListener;
 
     private Context context;
 
 
-    public MyAdapter(List<Movie> movies, int layout, OnItemClickListener listener) {
-        this.movies = movies;
+    public FruitAdapter(List<Fruit> fruits, int layout, OnItemClickListener listener) {
+        this.fruits = fruits;
         this.layout = layout;
         this.itemClickListener = listener;
     }
@@ -50,12 +50,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         // Llamamos al método Bind del ViewHolder pasándole objeto y listener
-        holder.bind(movies.get(position), itemClickListener);
+        holder.bind(fruits.get(position), itemClickListener);
     }
 
     @Override
     public int getItemCount() {
-        return movies.size();
+        return fruits.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -73,7 +73,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         }
 
-        public void bind(final Movie movie, final OnItemClickListener listener) {
+        public void bind(final Fruit movie, final OnItemClickListener listener) {
             // Procesamos los datos a renderizar (aquí lo procesamos, los relleno con nuestros valores!)
             textViewName.setText(movie.getName());
 
@@ -97,7 +97,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     // Declaramos nuestra interfaz con el/los método/s a implementar
     public interface OnItemClickListener {
-        void onItemClick(Movie movies, int position);
+        void onItemClick(Fruit movies, int position);
     }
 
 

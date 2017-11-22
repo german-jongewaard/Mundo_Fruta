@@ -12,20 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dev.com.jongewaard.mundo_fruta.R;
-import dev.com.jongewaard.mundo_fruta.adapters.MyAdapter;
-import dev.com.jongewaard.mundo_fruta.models.Movie;
+import dev.com.jongewaard.mundo_fruta.adapters.FruitAdapter;
+import dev.com.jongewaard.mundo_fruta.models.Fruit;
 
 public class MainActivity extends AppCompatActivity {
 
-    //declarando mi recycler view, lo primero la lista de nombres con la que voy a trabajar
-    private List<Movie> movies;
-
     private RecyclerView mRecyclerView;
-
-    //Puede ser declarado como 'RecyclerView.Adapter' o como nuestra clase adaptador 'MyAdapter'
-    private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private FruitAdapter adapter;
 
+    private List<Fruit> fruits;
     private int counter = 0;
 
     @Override
@@ -33,22 +29,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //aqui INSTANCIO la lista
-        movies = this.getAllMovies();
+        fruits = this.getAllFruits();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mLayoutManager = new LinearLayoutManager(this);
-        //Ejemplos!
-        //mLayoutManager = new GridLayoutManager(this, 2);
-        //mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        /*
+        *   Observa como pasamos el activity , con this. Podríamos declarar
+        *   Activity o Context en el constructory funcionaria pasando el mismo valor, this.
+        *
+        * */
 
-        // Implementamos nuestro OnItemClickListener propio, sobreescribiendo el método que nosotros
-        // definimos en el adaptador, y recibiendo los parámetros que necesitamos
-        mAdapter = new MyAdapter(movies, R.layout.recycler_view_item, new MyAdapter.OnItemClickListener() {
+        adapter = new FruitAdapter(fruits, R.layout.recycler_view_item, new FruitAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(Movie movies, int position) {
-                //Toast.makeText(MainActivity.this, name + " - " + position, Toast.LENGTH_LONG).show();
-               deleteMovie(position);
+            public void onItemClick(Fruit fruits, int position) {
+
+               deleteFruit(position);
             }
         });
 
@@ -59,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Enlazamos el layout manager y adaptor directamente al recycler view
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -71,36 +66,39 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.add_name:
-                this.addMovie(0);
+            case R.id.add_fruit:
+                //this.addFruit(0);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private List<Movie> getAllMovies(){
-        return new ArrayList<Movie>(){{
-            add(new Movie("Ben Hur", R.drawable.benhur));
-            add(new Movie("DeadPool", R.drawable.deadpool));
-            add(new Movie("Guardians of the Galaxy", R.drawable.guardians));
-            add(new Movie("Warcraft", R.drawable.warcraft));
+    private List<Fruit> getAllFruits(){
+        return new ArrayList<Fruit>(){{
+            add(new Fruit("Strawberry", "Strawberry description", R.drawable.strawberry_bg, R.mipmap.ic_strawberry, 0));
+            add(new Fruit("Orange", "Orange description", R.drawable.orange_bg, R.mipmap.ic_orange, 0));
+            add(new Fruit("Apple", "Apple description", R.drawable.apple_bg, R.mipmap.ic_apple, 0));
+            add(new Fruit("Banana", "Banana description", R.drawable.banana_bg, R.mipmap.ic_banana, 0));
+            add(new Fruit("Cherry", "Cherry description", R.drawable.cherry_bg, R.mipmap.ic_cherry, 0));
+            add(new Fruit("Pear", "Pear description", R.drawable.pear_bg, R.mipmap.ic_pear, 0));
+            add(new Fruit("Raspberry", "Raspberry description", R.drawable.raspberry_bg, R.mipmap.ic_raspberry, 0));
 
         }};
     }
 
-    private void addMovie(int position) {
-        movies.add(position, new Movie("New image " + (++counter), R.drawable.newmovie));
+    private void addFruit(int position) {
+        fruits.add(position, new Fruit("New fruit " + (++counter), R.drawable.newmovie));
         // Notificamos de un nuevo item insertado en nuestra colección
-        mAdapter.notifyItemInserted(position);
+        adapter.notifyItemInserted(position);
         // Hacemos scroll hacia lo posición donde el nuevo elemento se aloja
         mLayoutManager.scrollToPosition(position);
     }
 
-    private void deleteMovie(int position){
+    private void deleteFruit(int position){
 
-        movies.remove(position);
+        fruits.remove(position);
         // Notificamos de un item borrado en nuestra colección
-        mAdapter.notifyItemRemoved(position);
+        adapter.notifyItemRemoved(position);
     }
 }
