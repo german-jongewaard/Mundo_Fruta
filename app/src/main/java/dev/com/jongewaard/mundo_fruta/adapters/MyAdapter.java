@@ -12,8 +12,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import dev.com.jongewaard.seccion_03_recyclerview.R;
-import dev.com.jongewaard.seccion_03_recyclerview.models.Movie;
+import dev.com.jongewaard.mundo_fruta.R;
+import dev.com.jongewaard.mundo_fruta.models.Movie;
 
 /**
  * Created by german on 20-11-17.
