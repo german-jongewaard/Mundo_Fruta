@@ -1,19 +1,30 @@
 package dev.com.jongewaard.mundo_fruta.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import dev.com.jongewaard.mundo_fruta.R;
+import dev.com.jongewaard.mundo_fruta.models.Fruit;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import dev.com.jongewaard.mundo_fruta.R;
-import dev.com.jongewaard.mundo_fruta.models.Fruit;
+
 
 /**
  * Created by german on 20-11-17.
@@ -23,34 +34,28 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
 
     private List<Fruit> fruits;
     private int layout;
-    private OnItemClickListener itemClickListener;
+    private Activity activity;
+    private OnItemClickListener listener;
 
-    private Context context;
-
-
-    public FruitAdapter(List<Fruit> fruits, int layout, OnItemClickListener listener) {
+    // Pasamos el activity en vez del context, ya que nos hará falta para poder inflar en context menu
+    public FruitAdapter(List<Fruit> fruits, int layout, Activity activity, OnItemClickListener listener) {
         this.fruits = fruits;
         this.layout = layout;
-        this.itemClickListener = listener;
+        this.activity = activity;
+        this.listener = listener;
     }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // Inflamos el layout y se lo pasamos al constructor del ViewHolder, donde manejaremos
-        // toda la lógica como extraer los datos, referencias...
-        View v = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
-
-        //Rellenando el Contexto para la libreria Picasso
-        context = parent.getContext();
-
+        View v = LayoutInflater.from(activity).inflate(layout, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        // Llamamos al método Bind del ViewHolder pasándole objeto y listener
-        holder.bind(fruits.get(position), itemClickListener);
+        holder.bind(fruits.get(position), listener);
     }
 
     @Override
@@ -58,47 +63,93 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
         return fruits.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        // Elementos UI a rellenar (declarados)
+    // Implementamos las interfaces OnCreateContextMenuListener y OnMenuItemClickListener
+    // para hacer uso del context menu en RecyclerView, y sobreescribimos los métodos
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener {
+
         public TextView textViewName;
-        public ImageView imageViewPoster;
+        public TextView textViewDescription;
+        public TextView textViewQuantity;
+        public ImageView imageViewBackground;
 
         public ViewHolder(View itemView) {
-            // Recibe la View completa. La pasa al constructor padre y enlazamos referencias UI
-            // con nuestras propiedades ViewHolder declaradas justo arriba.
             super(itemView);
-            //(instanciados)
-            textViewName = (TextView) itemView.findViewById(R.id.textViewTitle);
-            imageViewPoster = (ImageView) itemView.findViewById(R.id.imageViewPoster);
-
+            textViewName = (TextView) itemView.findViewById(R.id.textViewName);
+            textViewDescription = (TextView) itemView.findViewById(R.id.textViewDescription);
+            textViewQuantity = (TextView) itemView.findViewById(R.id.textViewQuantity);
+            imageViewBackground = (ImageView) itemView.findViewById(R.id.imageViewBackground);
+            // Añadimos al view el listener para el context menu, en vez de hacerlo en
+            // el activity mediante el método registerForContextMenu
+            itemView.setOnCreateContextMenuListener(this);
         }
 
-        public void bind(final Fruit movie, final OnItemClickListener listener) {
-            // Procesamos los datos a renderizar (aquí lo procesamos, los relleno con nuestros valores!)
-            textViewName.setText(movie.getName());
+        public void bind(final Fruit fruit, final OnItemClickListener listener) {
 
-            //Libreria Picasso                     con fit() extiendo la imagen en to do el cuadrado
-            //                 con into() es donde vamos a cargarla, seria, dentro del "imageViewPoster"
-            Picasso.with(context).load(movie.getPoster()).fit().into(imageViewPoster);
-            //imageViewPoster.setImageResource(movie.getPoster());
-
-            // Definimos que por cada elemento de nuestro recycler view, tenemos un click listener
-            // que se comporta de la siguiente manera...
-            itemView.setOnClickListener(new View.OnClickListener() {
+            this.textViewName.setText(fruit.getName());
+            this.textViewDescription.setText(fruit.getDescription());
+            this.textViewQuantity.setText(fruit.getQuantity() + "");
+            // Lógica aplicada para la limitación de la cantidad en cada elemento fruta
+            if (fruit.getQuantity() == Fruit.LIMIT_QUANTITY) {
+                textViewQuantity.setTextColor(ContextCompat.getColor(activity, R.color.colorAlert));
+                textViewQuantity.setTypeface(null, Typeface.BOLD);
+            } else {
+                textViewQuantity.setTextColor(ContextCompat.getColor(activity, R.color.defaultTextColor));
+                textViewQuantity.setTypeface(null, Typeface.NORMAL);
+            }
+            // Cargamos la imagen con Picasso
+            Picasso.with(activity).load(fruit.getImgBackground()).fit().into(this.imageViewBackground);
+            // Añadimos el listener click para cada elemento fruta
+            this.imageViewBackground.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // ... pasamos nuestro objeto modelo (este caso String) y posición
-                    listener.onItemClick(movie, getAdapterPosition());
-
+                    listener.onItemClick(fruit, getAdapterPosition());
                 }
             });
         }
+
+        // Sobreescribimos onCreateContextMenu, dentro del ViewHolder,
+        // en vez de hacerlo en el activity
+        @Override
+        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+            // Recogemos la posición con el método getAdapterPosition
+            Fruit fruitSelected = fruits.get(this.getAdapterPosition());
+            // Establecemos título e icono para cada elemento, mirando en sus propiedades
+            contextMenu.setHeaderTitle(fruitSelected.getName());
+            contextMenu.setHeaderIcon(fruitSelected.getImgIcon());
+            // Inflamos el menú
+            MenuInflater inflater = activity.getMenuInflater();
+            inflater.inflate(R.menu.context_menu_fruit, contextMenu);
+            // Por último, añadimos uno por uno, el listener onMenuItemClick para
+            // controlar las acciones en el contextMenu, anteriormente lo manejábamos
+            // con el método onContextItemSelected en el activity
+            for (int i = 0; i < contextMenu.size(); i++)
+                contextMenu.getItem(i).setOnMenuItemClickListener(this);
+        }
+
+        // Sobreescribimos onMenuItemClick, dentro del ViewHolder,
+        // en vez de hacerlo en el activity bajo el nombre onContextItemSelected
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            // No obtenemos nuestro objeto info
+            // porque la posición la podemos rescatar desde getAdapterPosition
+            switch (menuItem.getItemId()) {
+                case R.id.delete_fruit:
+                    // Observa que como estamos dentro del adaptador, podemos acceder
+                    // a los métodos propios de él como notifyItemRemoved o notifyItemChanged
+                    fruits.remove(getAdapterPosition());
+                    notifyItemRemoved(getAdapterPosition());
+                    return true;
+                case R.id.reset_fruit_quantity:
+                    fruits.get(getAdapterPosition()).resetQuantity();
+                    notifyItemChanged(getAdapterPosition());
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 
-    // Declaramos nuestra interfaz con el/los método/s a implementar
     public interface OnItemClickListener {
-        void onItemClick(Fruit movies, int position);
+        void onItemClick(Fruit fruit, int position);
     }
-
-
 }

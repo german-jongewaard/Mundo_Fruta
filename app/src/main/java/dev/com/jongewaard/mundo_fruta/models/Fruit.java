@@ -55,9 +55,12 @@ public class Fruit {
     //Añadir cantidad
     public void addQuantity(int quantity){
 
-        if(this.quantity < LIMIT_QUANTITY)  this.quantity += quantity;
+        if(this.quantity < LIMIT_QUANTITY)
+
+            this.quantity += quantity;
     }
 
     //Reset cantidad
     public void resetQuantity(){ this.quantity = RESET_VALUE_QUANTITY; }
+
 }

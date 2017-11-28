@@ -39,22 +39,21 @@ public class MainActivity extends AppCompatActivity {
         *
         * */
 
-        adapter = new FruitAdapter(fruits, R.layout.recycler_view_item, new FruitAdapter.OnItemClickListener() {
+        adapter = new FruitAdapter(fruits, R.layout.recycler_view_item, this, new FruitAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(Fruit fruits, int position) {
-
-               deleteFruit(position);
+            public void onItemClick(Fruit fruit, int position) {
+                fruit.addQuantity(1);
+                adapter.notifyItemChanged(position);
             }
         });
 
         // Lo usamos en caso de que sepamos que el layout no va a cambiar de tamaño, mejorando la performance
         mRecyclerView.setHasFixedSize(true);
-        // Añade un efecto por defecto, si le pasamos null lo desactivamos por completo
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
         // Enlazamos el layout manager y adaptor directamente al recycler view
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(adapter);
+        /* No registramos para el menu contexto nada aqui, lo movemos al ViewHolder del adaptador
+        * */
     }
 
     @Override
@@ -67,7 +66,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_fruit:
-                //this.addFruit(0);
+                //Rescatamos el numero de frutas para saber en que posición insertamos
+                int position =fruits.size();//devuelve el numero de frutas!
+                fruits.add(position, new Fruit("Plum" + (++counter), "Fruit added by the user", R.drawable.plum_bg, R.mipmap.ic_plum, 0));
+                adapter.notifyItemInserted(position);
+                mLayoutManager.scrollToPosition(position);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -88,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addFruit(int position) {
-        fruits.add(position, new Fruit("New fruit " + (++counter), R.drawable.newmovie));
+        fruits.add(position, new Fruit("New fruit " + (++counter), R.drawable.plum_bg));
         // Notificamos de un nuevo item insertado en nuestra colección
         adapter.notifyItemInserted(position);
         // Hacemos scroll hacia lo posición donde el nuevo elemento se aloja
