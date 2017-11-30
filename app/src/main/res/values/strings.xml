@@ -1,13 +1,5 @@
 <resources>
-    <string name="app_name">Cuerno de Guerra</string>
-
-    <string name="txt1">1 Sed a rhoncus nunc, eget porttitor tellus. Nunc nunc nisl, accumsan vitae sagittis in, finibus rutrum nulla. Nunc luctus diam eu nunc rutrum mattis. Morbi non neque et massa efficitur porta vel venenatis massa. Duis porttitor nibh ut ipsum efficitur, sit amet egestas magna eleifend. Duis eu posuere magna. Integer eget mauris diam.</string>
-    <string name="txt2">2 Sed a rhoncus nunc, eget porttitor tellus. Nunc nunc nisl, accumsan vitae sagittis in, finibus rutrum nulla. Nunc luctus diam eu nunc rutrum mattis. Morbi non neque et massa efficitur porta vel venenatis massa. Duis porttitor nibh ut ipsum efficitur, sit amet egestas magna eleifend. Duis eu posuere magna. Integer eget mauris diam.</string>
-    <string name="txt3">3 Sed a rhoncus nunc, eget porttitor tellus. Nunc nunc nisl, accumsan vitae sagittis in, finibus rutrum nulla. Nunc luctus diam eu nunc rutrum mattis. Morbi non neque et massa efficitur porta vel venenatis massa. Duis porttitor nibh ut ipsum efficitur, sit amet egestas magna eleifend. Duis eu posuere magna. Integer eget mauris diam.</string>
-    <string name="txt4">4 Sed a rhoncus nunc, eget porttitor tellus. Nunc nunc nisl, accumsan vitae sagittis in, finibus rutrum nulla. Nunc luctus diam eu nunc rutrum mattis. Morbi non neque et massa efficitur porta vel venenatis massa. Duis porttitor nibh ut ipsum efficitur, sit amet egestas magna eleifend. Duis eu posuere magna. Integer eget mauris diam.</string>
-    <string name="txt5">5 Sed a rhoncus nunc, eget porttitor tellus. Nunc nunc nisl, accumsan vitae sagittis in, finibus rutrum nulla. Nunc luctus diam eu nunc rutrum mattis. Morbi non neque et massa efficitur porta vel venenatis massa. Duis porttitor nibh ut ipsum efficitur, sit amet egestas magna eleifend. Duis eu posuere magna. Integer eget mauris diam.</string>
-    <string name="txt6">6 Sed a rhoncus nunc, eget porttitor tellus. Nunc nunc nisl, accumsan vitae sagittis in, finibus rutrum nulla. Nunc luctus diam eu nunc rutrum mattis. Morbi non neque et massa efficitur porta vel venenatis massa. Duis porttitor nibh ut ipsum efficitur, sit amet egestas magna eleifend. Duis eu posuere magna. Integer eget mauris diam.</string>
-    <string name="txt7">7 Sed a rhoncus nunc, eget porttitor tellus. Nunc nunc nisl, accumsan vitae sagittis in, finibus rutrum nulla. Nunc luctus diam eu nunc rutrum mattis. Morbi non neque et massa efficitur porta vel venenatis massa. Duis porttitor nibh ut ipsum efficitur, sit amet egestas magna eleifend. Duis eu posuere magna. Integer eget mauris diam.</string>
+    <string name="app_name">Mundo Fruta</string>
 
 
 </resources>
